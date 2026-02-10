@@ -9,25 +9,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const supabase = createClient();
+    // Skip if Supabase isn't configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) return;
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event: AuthChangeEvent) => {
-      // When auth state changes (sign in, sign out, token refresh),
-      // re-render server components so they pick up the new cookies
-      if (
-        event === "SIGNED_IN" ||
-        event === "SIGNED_OUT" ||
-        event === "TOKEN_REFRESHED"
-      ) {
-        router.refresh();
-      }
-    });
+    try {
+      const supabase = createClient();
 
-    return () => {
-      subscription.unsubscribe();
-    };
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((event: AuthChangeEvent) => {
+        if (
+          event === "SIGNED_IN" ||
+          event === "SIGNED_OUT" ||
+          event === "TOKEN_REFRESHED"
+        ) {
+          router.refresh();
+        }
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    } catch {
+      // Supabase not configured yet
+    }
   }, [router]);
 
   return <>{children}</>;
