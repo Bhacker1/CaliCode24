@@ -16,7 +16,7 @@ export function UploadZone({
   onFileSelect,
   disabled = false,
   accept = "image/*,.pdf",
-  maxSizeMB = 25,
+  maxSizeMB = 100,
 }: UploadZoneProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);

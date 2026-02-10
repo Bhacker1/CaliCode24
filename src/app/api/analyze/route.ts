@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import type { ComplianceAnalysis } from "@/lib/types";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+// Allow up to 100MB uploads
+export const maxDuration = 60;
+export const fetchCache = "default-no-store";
+
 const SYSTEM_PROMPT = `You are a California Title 24 Building Energy Code expert specializing in HVAC and construction compliance.
 
 Analyze the attached image or text. It may be a floor plan, equipment schedule, HVAC layout, mechanical plan, or equipment specification.
